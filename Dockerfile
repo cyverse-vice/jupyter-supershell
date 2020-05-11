@@ -95,6 +95,8 @@ COPY /Drug_A_2.fastq /home/jovyan/data/Drug_A_2.fastq
 COPY /Drug_B_1.fastq /home/jovyan/data/Drug_B_1.fastq
 COPY /Drug_B_2.fastq /home/jovyan/data/Drug_B_2.fastq
 
+#test 
+
 #Setup Entry Points
 COPY entry.sh /bin
 RUN mkdir -p /home/jovyan/.irods
