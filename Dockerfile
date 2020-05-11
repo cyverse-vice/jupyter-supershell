@@ -71,8 +71,11 @@ RUN conda install kallisto
 RUN pip install bash_kernel && python3 -m bash_kernel.install 
 
 #add TDM
-COPY /TDM-GCC-64 /bin/tdm
-ENV PATH "$PATH:/bin/tdm/bin"
+RUN sudo apt-get install -y unzip
+RUN wget -O /bin/tdm.zip https://www.csc.tntech.edu/pdcincs/resources/modules/tools/TDM-GCC-64.zip --no-check-certificate
+RUN unzip /bin/tdm.zip -d /bin
+RUN rm /bin/tdm.zip
+ENV PATH "$PATH:/bin/TDM-GCC-64/bin"
 
 #pull openmp
 RUN git clone https://github.com/pdewan/OpenMPTraining.git /home/jovyan/OpenMPTraining
