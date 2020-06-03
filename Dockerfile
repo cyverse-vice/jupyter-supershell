@@ -81,7 +81,11 @@ RUN rm /bin/tdm.zip
 ENV PATH "$PATH:/bin/TDM-GCC-64/bin"
 
 #pull openmp
-RUN git clone https://github.com/pdewan/OpenMPTraining.git /home/jovyan/OpenMPTraining
+RUN git clone https://github.com/pdewan/OpenMPTraining.git /OpenMPTraining
+
+
+#pull super shell
+RUN git clone https://github.com/SaumyashreeRay/SuperShell.git /SuperShell
 
 #pull transcriptom
 RUN mkdir /transcriptom \
