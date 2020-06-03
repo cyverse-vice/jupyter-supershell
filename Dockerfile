@@ -59,7 +59,10 @@ RUN conda install kallisto
 # install fastqc
 
 # install fastx-toolkit
-#RUN conda install -c bioconda/label/cf201901 fastx_toolkit
+RUN sudo apt-get install -y fastx-toolkit
+
+#intstall fastx matching script
+COPY fastx_full.sh /bin/fastx_full
 
 # wget the sample data and practice data 
 
@@ -79,6 +82,14 @@ ENV PATH "$PATH:/bin/TDM-GCC-64/bin"
 
 #pull openmp
 RUN git clone https://github.com/pdewan/OpenMPTraining.git /home/jovyan/OpenMPTraining
+
+#pull transcriptom
+RUN mkdir /transcriptom \
+    && wget ftp://ftp.ensembl.org/pub/release-100/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz -O /transcriptom/Homo_sapiens_transcriptom.fa.gz \
+    && chmod 777 /transcriptom/Homo_sapiens_transcriptom.fa.gz \
+    && gunzip /transcriptom/Homo_sapiens_transcriptom.fa.gz \
+    && kallisto index -i /transcriptom/Homo_sapiens_transcriptom.index /transcriptom/Homo_sapiens_transcriptom.fa
+
 
 #set User Permissions
 RUN usermod -d /home/jovyan -u 1000 jovyan
