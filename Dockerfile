@@ -83,10 +83,6 @@ ENV PATH "$PATH:/bin/TDM-GCC-64/bin"
 #pull openmp
 RUN git clone https://github.com/pdewan/OpenMPTraining.git /OpenMPTraining
 
-
-#pull super shell
-RUN git clone https://github.com/SaumyashreeRay/SuperShell.git /SuperShell
-
 #pull transcriptom
 RUN mkdir /transcriptom \
     && wget ftp://ftp.ensembl.org/pub/release-100/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz -O /transcriptom/Homo_sapiens_transcriptom.fa.gz \
@@ -94,24 +90,20 @@ RUN mkdir /transcriptom \
     && gunzip /transcriptom/Homo_sapiens_transcriptom.fa.gz \
     && kallisto index -i /transcriptom/Homo_sapiens_transcriptom.index /transcriptom/Homo_sapiens_transcriptom.fa
 
+#pull super shell and install
+RUN git clone https://github.com/SaumyashreeRay/SuperShell.git /SuperShell \
+    && sudo apt-get install -y jq
+COPY linux_install_supershell_docker.sh /SuperShell/linux_install_supershell_docker.sh
+#RUN chmod +x /SuperShell/linux_install_supershell_docker.sh \
+#    && /SuperShell/linux_install_supershell_docker.sh 
+
 
 #set User Permissions
 RUN usermod -d /home/jovyan -u 1000 jovyan
 RUN chown -R jovyan:users /home/jovyan
 
 USER jovyan
-
-RUN mkdir -p /home/jovyan/.irods
-
-#Data Files
-RUN mkdir -p /home/jovyan/data
-COPY /Drug_A_1.fastq /home/jovyan/data/Drug_A_1.fastq
-COPY /Drug_A_2.fastq /home/jovyan/data/Drug_A_2.fastq
-COPY /Drug_B_1.fastq /home/jovyan/data/Drug_B_1.fastq
-COPY /Drug_B_2.fastq /home/jovyan/data/Drug_B_2.fastq
-
-#test 
-
+ 
 #Setup Entry Points
 COPY entry.sh /bin
 RUN mkdir -p /home/jovyan/.irods
