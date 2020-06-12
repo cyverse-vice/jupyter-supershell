@@ -90,6 +90,11 @@ RUN mkdir /transcriptom \
     && gunzip /transcriptom/Homo_sapiens_transcriptom.fa.gz \
     && kallisto index -i /transcriptom/Homo_sapiens_transcriptom.index /transcriptom/Homo_sapiens_transcriptom.fa
 
+#pull dylan_plugin
+RUN git clone https://github.com/dylanjtastet/llvm-instr /llvm-instr \
+    && sudo apt-get install -y clang \
+    && sudo apt-get install -y llvm
+
 #pull super shell and install
 RUN git clone https://github.com/SaumyashreeRay/SuperShell.git /SuperShell \
     && sudo apt-get install -y jq
