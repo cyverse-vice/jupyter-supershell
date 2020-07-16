@@ -106,7 +106,7 @@ COPY linux_install_supershell_docker.sh /SuperShell/linux_install_supershell_doc
 RUN sudo apt-get remove --auto-remove -y git 
 
 #set User Permissions
-RUN usermod -d /home/jovyan -u 999 jovyan
+RUN usermod -d /home/jovyan -u 1000 jovyan
 RUN chown -R jovyan:users /home/jovyan
 
 USER jovyan
