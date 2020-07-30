@@ -1,4 +1,4 @@
-FROM jupyter/scipy-notebook:c094bb7219f9
+FROM jupyter/scipy-notebook:ubuntu-18.04
 COPY /jupyter_notebook_config.json /opt/conda/etc/jupyter/jupyter_notebook_config.json
 
 USER root
