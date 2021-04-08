@@ -1,13 +1,7 @@
-cp /SuperShell/offline.sh ~/.offline.sh
-cp /SuperShell/interactive.txt ~/.interactive.txt
-cp /SuperShell/supershellhelp.txt ~/supershellhelp.txt
-cp /SuperShell/ruledir.txt ~/ruledir.txt
-cp /SuperShell/add_interactive.sh ~/add_interactive.sh
-cp /SuperShell/disable_help.sh ~/disable_help.sh
-cp /SuperShell/enable_help.sh ~/enable_help.sh
-cp -r /SuperShell/SuperShellRules ~/
-cp -r /SuperShell ~/SuperShell
-mkdir ~/SuperShell/SuperShellHistory
-echo "bash ~/.offline.sh" >> ~/.bash_profile
-echo "exit" >> ~/.bash_profile
+cp -r /SuperShell/DockerSuperShell/SuperShellV2 ~/SuperShell
+cd ~
+chmod -R 755 SuperShell
+cd ~/SuperShell
+source ./cyverse_install.sh
+cd ~
 source ~/.bash_profile

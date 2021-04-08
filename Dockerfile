@@ -31,22 +31,20 @@ RUN pip install jupyterlab_irods==3.0.2 \
 
 # install jupyterlab hub-extension, lab-manager, bokeh
 RUN jupyter lab --version \
-    && jupyter labextension install @jupyterlab/hub-extension \
-                                    @jupyter-widgets/jupyterlab-manager 
+    && jupyter labextension install @jupyterlab/hub-extension 
                               
 # install jupyterlab git extension
-RUN jupyter labextension install @jupyterlab/git && \
-        pip install --upgrade jupyterlab-git && \
+RUN pip install --upgrade jupyterlab-git && \
         jupyter serverextension enable --py jupyterlab_git
 
-# install jupyterlab github extension
-RUN jupyter labextension install @jupyterlab/github
-
-RUN apt-get update && apt-get install -y build-essential cmake zlib1g-dev libhdf5-dev
+RUN apt-get update && apt-get install -y build-essential cmake zlib1g-dev libhdf5-dev \
+    && apt-get clean 
 
 # install conda environment
 RUN conda config --add channels bioconda && \
-    conda config --add channels conda-forge 
+    conda config --add channels conda-forge \
+    && conda install jupyterlab_widgets \
+    && conda install ipywidgets 
 
 # install kallisto
 RUN conda install kallisto
@@ -97,18 +95,19 @@ RUN git clone https://github.com/dylanjtastet/llvm-instr /llvm-instr \
     && sudo apt-get install -y llvm
 
 #pull super shell and install
-RUN git clone https://github.com/SaumyashreeRay/SuperShell.git /SuperShell \
+RUN git clone -b AutomaticLogSending https://github.com/pdewan/SuperShell.git /SuperShellInstall \
+    && mv /SuperShellInstall /SuperShell \
     && sudo apt-get install -y jq
 COPY linux_install_supershell_docker.sh /SuperShell/linux_install_supershell_docker.sh
-#RUN chmod +x /SuperShell/linux_install_supershell_docker.sh \
-#    && /SuperShell/linux_install_supershell_docker.sh 
 
 #Clean Up Git
-RUN sudo apt-get remove --auto-remove -y git 
+RUN sudo apt-get remove --auto-remove -y git \
+    && apt-get clean
 
 #set User Permissions
 RUN usermod -d /home/jovyan -u 1000 jovyan
 RUN chown -R jovyan:users /home/jovyan
+RUN chown -R jovyan:users /SuperShell
 
 USER jovyan
  
