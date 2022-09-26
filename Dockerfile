@@ -35,7 +35,7 @@ RUN jupyter lab --version \
                               
 # install jupyterlab git extension
 RUN pip install --upgrade jupyterlab-git && \
-        jupyter serverextension enable --py jupyterlab_git
+        jupyter server extension enable --py jupyterlab_git
 
 RUN apt-get update && apt-get install -y build-essential cmake zlib1g-dev libhdf5-dev \
     && apt-get clean 
@@ -104,10 +104,14 @@ COPY linux_install_supershell_docker.sh /SuperShell/linux_install_supershell_doc
 RUN sudo apt-get remove --auto-remove -y git \
     && apt-get clean
 
+#Make test director
+RUN mkdir /WorkDir
+
 #set User Permissions
-RUN usermod -d /home/jovyan -u 1000 jovyan
-RUN chown -R jovyan:users /home/jovyan
-RUN chown -R jovyan:users /SuperShell
+RUN usermod -d /home/jovyan -u 1000 jovyan \
+    && chown -R jovyan:users /home/jovyan \
+    && chown -R jovyan:users /SuperShell \
+    && chown -R jovyan:users /WorkDir
 
 USER jovyan
  
