@@ -27,14 +27,38 @@ RUN conda config --add channels bioconda && \
     && conda install ipywidgets \
     && conda install kallisto
 
-# install fastx-toolkit
-RUN sudo apt-get install -y fastx-toolkit
+#intstall fastx
+RUN mkdir fastx_bin \
+    && wget -O fastx_bin/fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar.bz2 http://hannonlab.cshl.edu/fastx_toolkit/fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar.bz2 \
+    && tar -xjf fastx_bin/fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar.bz2 -C ./fastx_bin \
+    && sudo cp fastx_bin/bin/* /usr/local/bin
 
 #intstall fastx matching script
 COPY fastx_full.sh /bin/fastx_full
 
 # add Bash kernel
 RUN pip install bash_kernel && python3 -m bash_kernel.install 
+
+#add TDM
+RUN sudo apt-get install -y unzip
+RUN wget -O /bin/tdm.zip https://www.csc.tntech.edu/pdcincs/resources/modules/tools/TDM-GCC-64.zip --no-check-certificate
+RUN unzip /bin/tdm.zip -d /bin
+RUN rm /bin/tdm.zip
+ENV PATH "$PATH:/bin/TDM-GCC-64/bin"
+
+#pull openmp
+RUN git clone https://github.com/pdewan/OpenMPTraining.git /OpenMPTraining
+
+#pull dylan_plugin
+RUN git clone https://github.com/dylanjtastet/llvm-instr /llvm-instr \
+    && sudo apt-get install -y clang \
+    && sudo apt-get install -y llvm
+
+#pull super shell and install
+RUN git clone -b AutomaticLogSending https://github.com/pdewan/SuperShell.git /SuperShellInstall \
+    && mv /SuperShellInstall /SuperShell \
+    && sudo apt-get install -y jq
+COPY linux_install_supershell_docker.sh /SuperShell/linux_install_supershell_docker.sh
 
 # Add sudo to jovyan user
 RUN apt update && \
@@ -48,11 +72,20 @@ ARG PRIV_CMDS='/bin/ch*,/bin/cat,/bin/gunzip,/bin/tar,/bin/mkdir,/bin/ps,/bin/mv
 RUN usermod -aG sudo jovyan && \
     echo "$LOCAL_USER ALL=NOPASSWD: $PRIV_CMDS" >> /etc/sudoers
 
+#Make test director
+RUN mkdir /WorkDir
+
 # Rebuild the Jupyter Lab with new tools
 RUN jupyter lab build
 
 RUN addgroup jovyan
 RUN usermod -aG jovyan jovyan
+
+#set User Permissions
+RUN usermod -d /home/jovyan -u 1000 jovyan \
+    && chown -R jovyan:users /home/jovyan \
+    && chown -R jovyan:users /SuperShell \
+    && chown -R jovyan:users /WorkDir
 
 USER jovyan
 WORKDIR /home/jovyan
