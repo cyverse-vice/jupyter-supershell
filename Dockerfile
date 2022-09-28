@@ -31,7 +31,8 @@ RUN conda config --add channels bioconda && \
 RUN mkdir fastx_bin \
     && wget -O fastx_bin/fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar.bz2 http://hannonlab.cshl.edu/fastx_toolkit/fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar.bz2 \
     && tar -xjf fastx_bin/fastx_toolkit_0.0.13_binaries_Linux_2.6_amd64.tar.bz2 -C ./fastx_bin \
-    && sudo cp fastx_bin/bin/* /usr/local/bin
+    && sudo cp fastx_bin/bin/* /usr/local/bin \ 
+    && rm -r fastx_bin
 
 #intstall fastx matching script
 COPY fastx_full.sh /bin/fastx_full
@@ -60,11 +61,18 @@ RUN git clone -b AutomaticLogSending https://github.com/pdewan/SuperShell.git /S
     && sudo apt-get install -y jq
 COPY linux_install_supershell_docker.sh /SuperShell/linux_install_supershell_docker.sh
 
+#Make test director
+RUN mkdir /WorkDir
+
 # Add sudo to jovyan user
 RUN apt update && \
     apt install -y sudo && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
+
+#Set Permissions 
+RUN chmod 777 -R /WorkDir \
+    && chmod 777 -R /SuperShell 
     
 ARG LOCAL_USER=jovyan
 ARG PRIV_CMDS='/bin/ch*,/bin/cat,/bin/gunzip,/bin/tar,/bin/mkdir,/bin/ps,/bin/mv,/bin/cp,/usr/bin/apt*,/usr/bin/pip*,/bin/yum'
@@ -72,20 +80,11 @@ ARG PRIV_CMDS='/bin/ch*,/bin/cat,/bin/gunzip,/bin/tar,/bin/mkdir,/bin/ps,/bin/mv
 RUN usermod -aG sudo jovyan && \
     echo "$LOCAL_USER ALL=NOPASSWD: $PRIV_CMDS" >> /etc/sudoers
 
-#Make test director
-RUN mkdir /WorkDir
-
 # Rebuild the Jupyter Lab with new tools
 RUN jupyter lab build
 
 RUN addgroup jovyan
 RUN usermod -aG jovyan jovyan
-
-#set User Permissions
-RUN usermod -d /home/jovyan -u 1000 jovyan \
-    && chown -R jovyan:users /home/jovyan \
-    && chown -R jovyan:users /SuperShell \
-    && chown -R jovyan:users /WorkDir
 
 USER jovyan
 WORKDIR /home/jovyan
