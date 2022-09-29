@@ -56,7 +56,7 @@ RUN git clone https://github.com/dylanjtastet/llvm-instr /llvm-instr \
     && sudo apt-get install -y llvm
 
 #pull super shell and install
-RUN git clone -b AutomaticLogSending https://github.com/pdewan/SuperShell.git /SuperShellInstall \
+RUN git clone -b CyverseLogging https://github.com/pdewan/SuperShell.git /SuperShellInstall \
     && mv /SuperShellInstall /SuperShell \
     && sudo apt-get install -y jq
 COPY linux_install_supershell_docker.sh /SuperShell/linux_install_supershell_docker.sh
