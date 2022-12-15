@@ -29,8 +29,6 @@ RUN unzip /bin/tdm.zip -d /bin
 RUN rm /bin/tdm.zip
 ENV PATH "$PATH:/bin/TDM-GCC-64/bin"
 
-USER jovyan
-
 #pull openmp
 RUN git clone https://github.com/pdewan/OpenMPTraining.git /OpenMPTraining
 
@@ -44,3 +42,13 @@ RUN git clone -b CyverseLogging https://github.com/pdewan/SuperShell.git /SuperS
     && mv /SuperShellInstall /SuperShell \
     && sudo apt-get install -y jq
 COPY linux_install_supershell_docker.sh /SuperShell/linux_install_supershell_docker.sh
+
+#set User Permissions
+RUN usermod -d /home/jovyan -u 1000 jovyan \
+    && chown -R jovyan:users /home/jovyan \
+    && chown -R jovyan:users /SuperShell 
+
+USER jovyan
+
+WORKDIR /home/jovyan
+ENTRYPOINT ["bash", "/bin/entry.sh"]
