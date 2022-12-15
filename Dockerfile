@@ -61,9 +61,6 @@ RUN git clone -b CyverseLogging https://github.com/pdewan/SuperShell.git /SuperS
     && sudo apt-get install -y jq
 COPY linux_install_supershell_docker.sh /SuperShell/linux_install_supershell_docker.sh
 
-#Make test director
-RUN mkdir /WorkDir
-
 # Add sudo to jovyan user
 RUN apt update && \
     apt install -y sudo && \
@@ -71,8 +68,7 @@ RUN apt update && \
     rm -rf /var/lib/apt/lists/*
 
 #Set Permissions 
-RUN chmod 777 -R /WorkDir \
-    && chmod 777 -R /SuperShell 
+RUN chmod 777 -R /SuperShell 
     
 ARG LOCAL_USER=jovyan
 ARG PRIV_CMDS='/bin/ch*,/bin/cat,/bin/gunzip,/bin/tar,/bin/mkdir,/bin/ps,/bin/mv,/bin/cp,/usr/bin/apt*,/usr/bin/pip*,/bin/yum'
