@@ -67,6 +67,9 @@ RUN apt update && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 
+#Set Custom permissions
+ENV PATH "$PATH:/home/jovyan/bin"
+
 #Set Permissions 
 RUN chmod 777 -R /SuperShell 
     
