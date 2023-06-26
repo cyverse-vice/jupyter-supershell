@@ -40,13 +40,6 @@ COPY fastx_full.sh /bin/fastx_full
 # add Bash kernel
 RUN pip install bash_kernel && python3 -m bash_kernel.install 
 
-#add TDM
-RUN sudo apt-get install -y unzip
-RUN wget -O /bin/tdm.zip https://www.csc.tntech.edu/pdcincs/resources/modules/tools/TDM-GCC-64.zip --no-check-certificate
-RUN unzip /bin/tdm.zip -d /bin
-RUN rm /bin/tdm.zip
-ENV PATH "$PATH:/bin/TDM-GCC-64/bin"
-
 #pull openmp
 RUN git clone https://github.com/pdewan/OpenMPTraining.git /OpenMPTraining
 
@@ -56,7 +49,7 @@ RUN git clone https://github.com/dylanjtastet/llvm-instr /llvm-instr \
     && sudo apt-get install -y llvm
 
 #pull super shell and install
-RUN git clone -b CyverseLogging https://github.com/pdewan/SuperShell.git /SuperShellInstall \
+RUN git clone -b CyverseLogging-v1.1 https://github.com/pdewan/SuperShell.git /SuperShellInstall \
     && mv /SuperShellInstall /SuperShell \
     && sudo apt-get install -y jq
 COPY linux_install_supershell_docker.sh /SuperShell/linux_install_supershell_docker.sh
