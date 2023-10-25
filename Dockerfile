@@ -28,7 +28,7 @@ RUN conda config --add channels bioconda \
     && mamba install ipywidgets jupyterlab_widgets kallisto -y
 
 #Clone SuperShell and Prepare to Install
-RUN git clone -b CyverseLogging-v1.1 https://github.com/pdewan/SuperShell.git /home/jovyan/RawSuper \ 
+RUN git clone -b CyverseLogging-v1.2 https://github.com/pdewan/SuperShell.git /home/jovyan/RawSuper \ 
     && cp -r /home/jovyan/RawSuper/DockerSuperShell/SuperShellV2 /home/jovyan/SuperShell \
     && rm -r /home/jovyan/RawSuper \
     && chmod -R 755 /home/jovyan/SuperShell
