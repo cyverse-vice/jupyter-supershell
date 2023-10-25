@@ -38,7 +38,7 @@ jobs:
         id: docker_build_three_six_one
         uses: docker/build-push-action@v4.1.1
         with:
-          context: 3.6.1
+          context: .
           file: Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
